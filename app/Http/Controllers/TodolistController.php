@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TodolistResource;
 use App\Models\Todolist;
 use Illuminate\Http\Request;
 
@@ -10,13 +11,11 @@ class TodolistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): TodolistResource
     {
         $todolists = Todolist::latest()->get();
 
-        return response()->json([
-            'data' => $todolists
-        ], 200);
+        return new TodolistResource($todolists);
     }
 
     /**
