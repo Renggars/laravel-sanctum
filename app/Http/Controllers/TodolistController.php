@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Todo\TodoCreateRequest;
 use App\Http\Resources\TodolistResource;
 use App\Models\Todolist;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TodolistController extends Controller
@@ -21,9 +23,14 @@ class TodolistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TodoCreateRequest $request): JsonResponse
     {
-        //
+        $data = $request->validated();
+
+        $todolist = new Todolist($data);
+        $todolist->save();
+
+        return (new TodolistResource($todolist))->response()->setStatusCode(201);
     }
 
     /**
