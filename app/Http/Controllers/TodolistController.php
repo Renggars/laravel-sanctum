@@ -54,7 +54,11 @@ class TodolistController extends Controller
     {
         $data = $request->validated();
 
-        $todolist = Todolist::findOrFail($id);
+        $todolist = Todolist::find($id);
+        if (!$todolist) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
         $todolist->fill($data);
         $todolist->save();
 
@@ -64,8 +68,17 @@ class TodolistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        $todolist = Todolist::find($id);
+        if (!$todolist) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
+        $todolist->delete();
+
+        return response()->json([
+            'message' => 'Todolist deleted successfully'
+        ], 200);
     }
 }
