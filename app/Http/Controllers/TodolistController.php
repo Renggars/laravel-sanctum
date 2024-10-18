@@ -13,11 +13,11 @@ class TodolistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): TodolistResource
+    public function index()
     {
         $todolists = Todolist::latest()->get();
 
-        return new TodolistResource($todolists);
+        return TodolistResource::collection($todolists);
     }
 
     /**
@@ -38,7 +38,12 @@ class TodolistController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $todo = Todolist::find($id);
+        if (!$todo) {
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
+
+        return new TodolistResource($todo);
     }
 
     /**
