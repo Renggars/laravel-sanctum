@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Todo\TodoCreateRequest;
+use App\Http\Requests\Todo\TodoUpdateRequest;
 use App\Http\Resources\TodolistResource;
 use App\Models\Todolist;
 use Illuminate\Http\JsonResponse;
@@ -49,9 +50,15 @@ class TodolistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(TodoUpdateRequest $request, string $id): TodolistResource
     {
-        //
+        $data = $request->validated();
+
+        $todolist = Todolist::findOrFail($id);
+        $todolist->fill($data);
+        $todolist->save();
+
+        return new TodolistResource($todolist);
     }
 
     /**
