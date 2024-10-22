@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Todolist;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\TodolistResource;
 use App\Http\Requests\Todo\TodoCreateRequest;
 use App\Http\Requests\Todo\TodoUpdateRequest;
-use App\Http\Resources\TodolistResource;
-use App\Models\Todolist;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TodolistController extends Controller
 {
@@ -16,9 +17,16 @@ class TodolistController extends Controller
      */
     public function index()
     {
-        $todolists = Todolist::latest()->get();
+        try {
+            $todolists = Todolist::latest()->get();
 
-        return TodolistResource::collection($todolists);
+            Log::info('Todolists retrieved successfully');
+
+            return TodolistResource::collection($todolists);
+        } catch (\Exception $e) {
+            Log::error('Todolists retrieval failed : ' . $e->getMessage());
+            return response()->json(['message' => 'Todolist not found'], 404);
+        }
     }
 
     /**
