@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Logging;
 use App\Models\Todolist;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +24,12 @@ class TodolistController extends Controller
             return TodolistResource::collection($todolists);
         } catch (\Exception $e) {
             Log::error('Todolists retrieval failed : ' . $e->getMessage());
+
+            Logging::record(
+                auth()->user(),
+                'Todolists retrieval failed : ' . $e->getMessage()
+            );
+
             return response()->json(['message' => 'Todolist retrieval failed ' . $e->getMessage()], 500);
         }
     }
