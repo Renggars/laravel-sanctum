@@ -20,12 +20,10 @@ class TodolistController extends Controller
         try {
             $todolists = Todolist::latest()->get();
 
-            Log::info('Todolists retrieved successfully');
-
             return TodolistResource::collection($todolists);
         } catch (\Exception $e) {
             Log::error('Todolists retrieval failed : ' . $e->getMessage());
-            return response()->json(['message' => 'Todolist not found'], 404);
+            return response()->json(['message' => 'Todolist retrieval failed ' . $e->getMessage()], 500);
         }
     }
 
