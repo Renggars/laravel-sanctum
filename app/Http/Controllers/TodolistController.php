@@ -25,10 +25,10 @@ class TodolistController extends Controller
         } catch (\Exception $e) {
             Log::error('Todolists retrieval failed : ' . $e->getMessage());
 
-            Logging::record(
-                auth()->user(),
-                'Todolists retrieval failed : ' . $e->getMessage()
-            );
+            // Logging::record(
+            //     auth()->user(),
+            //     'Todolists retrieval failed : ' . $e->getMessage()
+            // );
 
             return response()->json(['message' => 'Todolist retrieval failed ' . $e->getMessage()], 500);
         }
