@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LoginController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $data = $request->validated();
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        $user = User::where('email', $data['email'])->first();
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw new HttpResponseException(response([
+                'errors' => [
 
-        $user = Auth::user();
-
-        // Debugging: pastikan $user adalah instance dari User
-        if (!$user instanceof \App\Models\User) {
-            return response()->json(['message' => 'User instance not found or not valid'], 500);
+                    'message' => 'Invalid credentials'
+                ]
+            ], 401));
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;

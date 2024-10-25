@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
+use Database\Seeders\UserSeeder;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterTest extends TestCase
 {
@@ -33,6 +34,22 @@ class RegisterTest extends TestCase
                     'name' => 'Test User',
                     'email' => 'fXp9B@example.com',
                 ],
+            ]);
+
+        $this->assertIsString($response['access_token']);
+    }
+
+    public function testLoginSuccess()
+    {
+        $this->seed(UserSeeder::class);
+        $response = $this->postJson('/api/login', [
+            'email' => 'tes',
+            'password' => 'password',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'access_token'
             ]);
 
         $this->assertIsString($response['access_token']);
