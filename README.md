@@ -10,7 +10,7 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 
 ### Register
 
-- **Endpoint:** `/register`
+- **Endpoint:** `/api/register`
 - **Method:** `POST`
 - **Deskripsi:** Mendaftarkan user baru.
 - **Body Request:**
@@ -20,12 +20,29 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 - **Response:**
   - **Status Code:** `201 Created`
   - **Body Response:**
-  ```json
- {
-  "user": {
+```json
+{
+    "user": {
     "id": 1,
     "name": "User Name",
     "email": "user@example.com"
-  },
-  "access_token": "user-authentication-token"
+    },
+    "access_token": "user-authentication-token"
 }
+```
+
+### Login
+- **Endpoint:** `/api/login`
+- **Method:** `POST`
+- **Deskripsi:** Login user yang sudah terdaftar.
+- **Body Request:**
+  - `email` (string, required): Email user.
+  - `password` (string, required): Password user.
+- **Response:**
+  - **Status Code:** `201 Created`
+  - **Body Response:**
+```json
+{
+    "access_token": "user-authentication-token"
+}
+```
