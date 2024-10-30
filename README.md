@@ -46,3 +46,16 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
     "access_token": "user-authentication-token"
 }
 ```
+
+### Logout
+- **Endpoint:** `/api/logout`
+- **Method:** `POST`
+- **Deskripsi:** Logout user saat ini.
+- **Header:** `Authorization: Bearer <token>`
+- **Response:**
+```json
+{
+  "message": "Successfully logged out"
+}
+
+```
