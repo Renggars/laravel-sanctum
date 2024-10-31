@@ -65,3 +65,23 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 **Note:  Semua endpoint /todos memerlukan autentikasi menggunakan token Sanctum.**
 
 ---
+
+### Get All Todos
+- **Endpoint:** `/api/todos`
+- **Method:** `GET`
+- **Deskripsi:** Mendapatkan semua item Todo untuk pengguna yang sedang login. Logout user saat ini.
+- **Header:** `Authorization: Bearer <token>`
+- **Response:**
+```json
+{
+  "data": [
+    {
+      "id": 9,
+      "title": "create todo 2",
+      "description": "desc create todo 2",
+      "is_completed": 1
+    }
+  ]
+}
+
+```
