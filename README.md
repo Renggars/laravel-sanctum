@@ -57,5 +57,11 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 {
   "message": "Successfully logged out"
 }
-
 ```
+
+---
+
+### Todos API
+**Note:  Semua endpoint /todos memerlukan autentikasi menggunakan token Sanctum.**
+
+---
