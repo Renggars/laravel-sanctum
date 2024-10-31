@@ -85,7 +85,7 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 }
 ```
 
-### Get All Todos
+### Get Todo by ID
 - **Endpoint:** `/api/todos/{id}`
 - **Method:** `GET`
 - **Deskripsi:** Mendapatkan detail item Todo berdasarkan ID.
@@ -93,14 +93,12 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
 - **Response:**
 ```json
 {
-  "data": [
-    {
-      "id": 9,
-      "title": "create todo 2",
-      "description": "desc create todo 2",
-      "is_completed": 1
-    }
-  ]
+  "data": {
+    "id": 9,
+    "title": "create todo 2",
+    "description": "desc create todo 2",
+    "is_completed": 1
+  }
 }
 ```
 
