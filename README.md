@@ -83,5 +83,48 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
     }
   ]
 }
+```
 
+### Get All Todos
+- **Endpoint:** `/api/todos/{id}`
+- **Method:** `GET`
+- **Deskripsi:** Mendapatkan detail item Todo berdasarkan ID.
+- **Header:** `Authorization: Bearer <token>`
+- **Response:**
+```json
+{
+  "data": [
+    {
+      "id": 9,
+      "title": "create todo 2",
+      "description": "desc create todo 2",
+      "is_completed": 1
+    }
+  ]
+}
+```
+
+### Create a New Todo
+- **Endpoint:** `/api/todos`
+- **Method:** `POST`
+- **Deskripsi:** Membuat item Todo baru.
+- **Header:** `Authorization: Bearer <token>`
+- **Request Body:**
+```json
+{
+    "title" : "create todo 2",
+    "description": "desc create todo 2",
+    "is_completed": true
+}
+```
+- **Response:**
+```json
+{
+  "data": {
+    "id": 9,
+    "title": "create todo 2",
+    "description": "desc create todo 2",
+    "is_completed": true
+  }
+}
 ```
