@@ -27,4 +27,40 @@ class LoginTest extends TestCase
 
         $this->assertIsString($response['access_token']);
     }
+
+    public function testLoginWithMissingEmail()
+    {
+        $this->seed(UserSeeder::class);
+        $response = $this->postJson('/api/login', [
+            'email' => '',
+            'password' => 'password',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    "email" => [
+                        "The email field is required."
+                    ]
+                ]
+            ]);
+    }
+
+    public function testLoginWithMissingPasword()
+    {
+        $this->seed(UserSeeder::class);
+        $response = $this->postJson('/api/login', [
+            'email' => 'tes@example.com',
+            'password' => '',
+        ]);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    "password" => [
+                        "The password field is required."
+                    ]
+                ]
+            ]);
+    }
 }
