@@ -126,3 +126,24 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
   }
 }
 ```
+
+### Update a Todo
+- **Endpoint:** `/api/todos/{id}`
+- **Method:** `PUT`
+- **Deskripsi:** Memperbarui item Todo berdasarkan ID.
+- **Header:** `Authorization: Bearer <token>`
+- - **Request Body :**
+  - `title` (string, optional): Judul Todo yang diperbarui.
+  - `description` (string, optional): Deskripsi Todo yang diperbarui.
+  - `is_completed` (boolean, optional): Status Todo (true jika sudah selesai, false jika belum).
+- **Response:**
+```json
+{
+  "data": {
+    "id": 9,
+    "title": "create todo 2",
+    "description": "desc create todo 2",
+    "is_completed": 0
+  }
+}
+```
