@@ -46,7 +46,7 @@ class LoginTest extends TestCase
             ]);
     }
 
-    public function testLoginWithMissingPasword()
+    public function testLoginWithMissingPassword()
     {
         $this->seed(UserSeeder::class);
         $response = $this->postJson('/api/login', [
