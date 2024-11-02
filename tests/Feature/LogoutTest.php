@@ -35,4 +35,24 @@ class LogoutTest extends TestCase
             'token' => hash('sha256', explode('|', $token)[1]),
         ]);
     }
+
+    public function testLogoutWithoutToken()
+    {
+        $response = $this->postJson('/api/logout');
+
+        $response->assertStatus(401)
+            ->assertJson(['message' => 'Unauthenticated.']);
+    }
+
+    public function testLogoutWithInvalidToken()
+    {
+        $user = User::factory()->create();
+        $invalidToken = 'Bearer InvalidToken';
+
+        $response = $this->withHeader('Authorization', $invalidToken)
+            ->postJson('/api/logout');
+
+        $response->assertStatus(401)
+            ->assertJson(['message' => 'Unauthenticated.']);
+    }
 }
