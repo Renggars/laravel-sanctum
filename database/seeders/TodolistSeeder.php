@@ -13,12 +13,15 @@ class TodolistSeeder extends Seeder
      */
     public function run(): void
     {
-        Todolist::insert(
+        Todolist::create(
             [
                 'title' => 'Belajar Laravel',
                 'description' => 'Laravel is a web application framework with expressive, elegant syntax.',
                 'is_completed' => false
-            ],
+            ]
+        );
+
+        Todolist::create(
             [
                 'title' => 'Belajar PHP',
                 'description' => 'PHP is a server scripting language, and a powerful tool for making dynamic and interactive websites.',

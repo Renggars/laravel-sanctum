@@ -13,10 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $user = User::create([
             'name' => 'tes',
             'email' => 'tes@example.com',
             'password' => bcrypt('password'),
         ]);
+
+        // Buat token dengan Sanctum untuk keperluan testing
+        $user->createToken('TestToken')->plainTextToken;
     }
 }
