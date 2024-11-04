@@ -425,4 +425,84 @@ class TodolistTest extends TestCase
                 ]
             ]);
     }
+
+    public function testDeleteTodoSuccess()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Ambil salah satu todo untuk dihapus
+        $todo = Todolist::first();
+
+        // Request DELETE untuk menghapus todo
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson('/api/todos/' . $todo->id);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Todolist deleted successfully',
+            ]);
+
+        // Pastikan todo telah dihapus dari database
+        $this->assertDatabaseMissing('todolists', [
+            'id' => $todo->id,
+        ]);
+    }
+
+    public function testDeleteTodoNotFound()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // ID Todo yang tidak ada di database
+        $nonExistentId = 999;
+
+        // Request DELETE untuk ID yang tidak ditemukan
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson('/api/todos/' . $nonExistentId);
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'message' => 'Todolist not found',
+            ]);
+    }
+
+    public function testDeleteTodoWithoutToken()
+    {
+        $this->seed(TodolistSeeder::class);
+
+        // Ambil salah satu todo
+        $todo = Todolist::first();
+
+        // Request DELETE tanpa token
+        $response = $this->deleteJson('/api/todos/' . $todo->id);
+
+        $response->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
+
+    public function testDeleteTodoWithInvalidToken()
+    {
+        $this->seed(TodolistSeeder::class);
+
+        // Ambil salah satu todo
+        $todo = Todolist::first();
+
+        // Request DELETE dengan token yang tidak valid
+        $response = $this->withHeader('Authorization', 'Bearer invalid_token')
+            ->deleteJson('/api/todos/' . $todo->id);
+
+        $response->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
 }
