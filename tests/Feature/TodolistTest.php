@@ -308,4 +308,121 @@ class TodolistTest extends TestCase
                 ]
             ]);
     }
+
+    public function testUpdateTodoSuccess()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Ambil salah satu todo yang ada
+        $todo = Todolist::first();
+
+        // Data untuk diupdate
+        $data = [
+            'title' => 'Updated Title',
+            'description' => 'Updated Description',
+            'is_completed' => true
+        ];
+
+        // Request PATCH untuk memperbarui todo
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->patchJson('/api/todos/' . $todo->id, $data);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'id' => $todo->id,
+                    'title' => 'Updated Title',
+                    'description' => 'Updated Description',
+                    'is_completed' => true,
+                ]
+            ]);
+    }
+
+    public function testUpdateTodoWithInvalidTitle()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Ambil salah satu todo
+        $todo = Todolist::first();
+
+        // Data dengan title yang terlalu pendek
+        $data = [
+            'title' => 'ab', // Too short
+        ];
+
+        // Request PATCH untuk memperbarui todo
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->patchJson('/api/todos/' . $todo->id, $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'title' => ['The title field must be at least 3 characters.']
+                ]
+            ]);
+    }
+
+    public function testUpdateTodoWithInvalidDescription()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Ambil salah satu todo
+        $todo = Todolist::first();
+
+        // Data dengan description yang terlalu pendek
+        $data = [
+            'description' => 'ab', // Too short
+        ];
+
+        // Request PATCH untuk memperbarui todo
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->patchJson('/api/todos/' . $todo->id, $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'description' => ['The description field must be at least 3 characters.']
+                ]
+            ]);
+    }
+
+    public function testUpdateTodoWithInvalidCompletionValue()
+    {
+        $this->seed([UserSeeder::class, TodolistSeeder::class]);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Ambil salah satu todo
+        $todo = Todolist::first();
+
+        // Data dengan is_completed yang tidak valid
+        $data = [
+            'is_completed' => 'not_boolean', // Invalid boolean value
+        ];
+
+        // Request PATCH untuk memperbarui todo
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->patchJson('/api/todos/' . $todo->id, $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'is_completed' => ['The is completed field must be true or false.']
+                ]
+            ]);
+    }
 }
