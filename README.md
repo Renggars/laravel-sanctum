@@ -138,10 +138,10 @@ API ini menyediakan layanan untuk membuat dan mengelola todolist. Seluruh endpoi
   - `is_completed` (boolean, optional): Status Todo (true jika sudah selesai, false jika belum).
 ```json
 {
- "title": "create todo 2",
+    "title": "create todo 2",
     "description": "desc create todo 2",
     "is_completed": 0
-  }
+}
 ```
 - **Response:**
 ```json
