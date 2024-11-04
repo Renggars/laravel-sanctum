@@ -148,4 +148,164 @@ class TodolistTest extends TestCase
                 'message' => 'Unauthenticated.',
             ]);
     }
+
+    public function testCreateTodoSuccess()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', [
+                'title' => 'New Todo',
+                'description' => 'This is a new todo',
+                'is_completed' => false,
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'title' => 'New Todo',
+                    'description' => 'This is a new todo',
+                    'is_completed' => false,
+                ]
+            ]);
+    }
+
+
+    public function testCreateTodoWithMissingTitle()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Data tanpa title
+        $data = [
+            'description' => 'This is a new todo',
+            'is_completed' => false,
+        ];
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'title' => ['The title field is required.']
+                ]
+            ]);
+    }
+
+    public function testCreateTodoWithShortTitle()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Data dengan title yang terlalu pendek
+        $data = [
+            'title' => 'ab', // Short title
+            'description' => 'This is a new todo',
+            'is_completed' => false,
+        ];
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'title' => ['The title field must be at least 3 characters.']
+                ]
+            ]);
+    }
+
+    public function testCreateTodoWithLongTitle()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Data dengan title yang terlalu panjang
+        $data = [
+            'title' => str_repeat('a', 101), // Long title
+            'description' => 'This is a new todo',
+            'is_completed' => false,
+        ];
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'title' => ['The title field must not be greater than 100 characters.']
+                ]
+            ]);
+    }
+
+    public function testCreateTodoWithMissingDescription()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Data tanpa description
+        $data = [
+            'title' => 'New Todo',
+            'is_completed' => false,
+        ];
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'description' => ['The description field is required.']
+                ]
+            ]);
+    }
+
+    public function testCreateTodoWithInvalidCompletionValue()
+    {
+        $this->seed(UserSeeder::class);
+
+        // Ambil pengguna dan buat token otentikasi
+        $user = User::where('email', 'tes@example.com')->first();
+        $token = $user->createToken('TestToken')->plainTextToken;
+
+        // Data dengan nilai is_completed yang tidak valid
+        $data = [
+            'title' => 'New Todo',
+            'description' => 'This is a new todo',
+            'is_completed' => 'invalid_value', // Invalid value
+        ];
+
+        // Request POST untuk membuat todo baru
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson('/api/todos', $data);
+
+        $response->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'is_completed' => ['The is completed field must be true or false.']
+                ]
+            ]);
+    }
 }
